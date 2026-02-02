@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+# from scipy.optimize import brute
 
 class SMAVectorBacktester(object):
     ''' Class for the vectorized backtesting of SMA-based trading strategies. Assumes that you already have the data downloaded in data/prices folder.
@@ -58,6 +59,7 @@ class SMAVectorBacktester(object):
             skiprows=[1, 2]
         ).rename(columns={"Price": "Date", "Close": "price"}).set_index(keys='Date')
         df.index = pd.to_datetime(df.index)
+        df = df.loc[self.start:self.end]
         df2 = pd.DataFrame(df['price']) # Retain only the close price column
         # print(df2)
         df2['return'] = np.log(df2 / df2.shift(1))
@@ -65,42 +67,45 @@ class SMAVectorBacktester(object):
         df2['SMA2'] = df['price'].rolling(self.SMA2).mean()
         self.data = df2
 
-    # def set_parameters(self, SMA1=None, SMA2=None):
-    #     ''' Updates SMA parameters and resp. time series.
-    #     '''
-    #     if SMA1 is not None:
-    #         self.SMA1 = SMA1
-    #         self.data['SMA1'] = self.data['price'].rolling(self.SMA1).mean()
-    #     if SMA2 is not None:
-    #         self.SMA2 = SMA2
-    #         self.data['SMA2'] = self.data['price'].rolling(self.SMA2).mean()
+    def set_parameters(self, SMA1=None, SMA2=None):
+        ''' Updates SMA parameters and resp. time series.
+        '''
+        if SMA1 is not None:
+            self.SMA1 = SMA1
+            self.data['SMA1'] = self.data['price'].rolling(self.SMA1).mean()
+        if SMA2 is not None:
+            self.SMA2 = SMA2
+            self.data['SMA2'] = self.data['price'].rolling(self.SMA2).mean()
 
-    # def run_strategy(self):
-    #     ''' Backtests the trading strategy.
-    #     '''
-    #     data = self.data.copy().dropna()
-    #     data['position'] = np.where(data['SMA1'] > data['SMA2'], 1, -1)
-    #     data['strategy'] = data['position'].shift(1) * data['return']
-    #         data.dropna(inplace=True)
-    #     data['creturns'] = data['return'].cumsum().apply(np.exp)
-    #     data['cstrategy'] = data['strategy'].cumsum().apply(np.exp)
-    #     self.results = data
-    #     # gross performance of the strategy
-    #     aperf = data['cstrategy'].iloc[-1] # Last row of strategy returns - the actual returns
-    #     # out-/underperformance of strategy
-    #     operf = aperf - data['creturns'].iloc[-1] # Last row of benchmark returns minus strategy returns
-    #     return round(aperf, 2), round(operf, 2)
-
-    # def plot_results(self):
-    #     ''' Plots the cumulative performance of the trading strategy
-    #     compared to the symbol.
-    #     '''
-    #     if self.results is None:
-    #         print('No results to plot yet. Run a strategy.')
-    #     title = '%s | SMA1=%d, SMA2=%d' % (self.symbol,
-    #                                         self.SMA1, self.SMA2)
-    #     self.results[['creturns', 'cstrategy']].plot(title=title,
-    #                                                 figsize=(10, 6))
+    def run_strategy(self):
+        ''' Backtests the trading strategy.
+        '''
+        data = self.data.copy().dropna()
+        data['position'] = np.where(data['SMA1'] > data['SMA2'], 1, -1)
+        data['strategy'] = data['position'].shift(1) * data['return']
+        data.dropna(inplace=True)
+        data['creturns'] = data['return'].cumsum().apply(np.exp)
+        data['cstrategy'] = data['strategy'].cumsum().apply(np.exp)
+        self.results = data
+        # gross performance of the strategy
+        strategy_returns = data['cstrategy'].iloc[-1].item() # Last row of strategy returns - the actual returns
+        benchmark_returns = data['creturns'].iloc[-1].item()
+        difference_in_returns = strategy_returns - benchmark_returns
+        return {
+            "strategy_returns": round(strategy_returns, 2),
+            "benchmark_returns": round(benchmark_returns, 2),
+            "difference_in_returns": round(difference_in_returns, 2),
+        }
+    def plot_results(self):
+        ''' Plots the cumulative performance of the trading strategy
+        compared to the symbol.
+        '''
+        if self.results is None:
+            print('No results to plot yet. Run a strategy.')
+        title = '%s | SMA1=%d, SMA2=%d' % (self.symbol,
+                                            self.SMA1, self.SMA2)
+        self.results[['creturns', 'cstrategy']].plot(title=title,
+                                                    figsize=(10, 6))
 
     # def update_and_run(self, SMA):
     #     ''' Updates SMA parameters and returns negative absolute performance
