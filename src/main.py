@@ -5,17 +5,23 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 plt.style.use('seaborn-v0_8')
 # %%
-df = pd.read_json('../data/price/aapl.json', convert_dates=True)
+df = pd.read_csv('../data/price/AAPL_full.csv', header=0,
+            skiprows=[1, 2])
 # %%
-df.set_index('date', inplace=True)
+df
+# %%
+df.set_index('Price', inplace=True)
 df = df.sort_index(ascending=True)
 # %%
-data = pd.DataFrame(df['close'])
+data = pd.DataFrame(df['Close'])
 # %%
-# data = data.loc['2021-01-01': '2022-06-01']
+data = data.loc['2021-01-01': '2022-06-01']
 data
+
 # %%
 data.rename(columns={'close': 'price'}, inplace=True)
+# %%
+np.exp(np.log(data['Close'] / data['Close'].shift(1)).sum())
 # %%
 data['SMA1'] = data['price'].rolling(42).mean()
 data
