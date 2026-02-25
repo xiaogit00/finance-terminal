@@ -1,0 +1,7 @@
+2026-02-26 07:15:42,416 | INFO | Logging initialized. Saving to logs/BACKTEST_RUN_20260226_071542.log
+2026-02-26 07:15:42,417 | INFO | Generating backtests for dates between 2015-01-01 and 2019-12-31 for ['META', 'AAPL', 'AMZN', 'NFLX', 'GOOG']
+2026-02-26 07:15:43,224 | INFO | META:{'strategy_returns': 1.04, 'benchmark_returns': 2.1, 'difference_in_returns': -1.06}
+2026-02-26 07:15:43,246 | INFO | AAPL:{'strategy_returns': 1.84, 'benchmark_returns': 2.84, 'difference_in_returns': -1.0}
+2026-02-26 07:15:43,261 | INFO | AMZN:{'strategy_returns': 1.95, 'benchmark_returns': 3.24, 'difference_in_returns': -1.28}
+2026-02-26 07:15:43,275 | INFO | NFLX:{'strategy_returns': 1.27, 'benchmark_returns': 3.27, 'difference_in_returns': -2.0}
+2026-02-26 07:15:43,290 | INFO | GOOG:{'strategy_returns': 0.91, 'benchmark_returns': 2.02, 'difference_in_returns': -1.11}
