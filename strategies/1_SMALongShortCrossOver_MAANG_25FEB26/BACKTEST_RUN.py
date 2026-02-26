@@ -14,13 +14,16 @@ logger = setup_logger(filename_without_ext)
 stocks = ["META", "AAPL", "AMZN", "NFLX", "GOOG"]
 start = "2015-01-01"
 end = "2019-12-31"
+shortSMAdays = 40
+longSMAdays = 200
 
 logger.info(f"Generating backtests for dates between {start} and {end} for {stocks}")
 # %%
 for ticker in stocks:
-    sma_crossover_stock = SMACrossoverStrategyBacktester(ticker, 40, 200, start, end)
+    sma_crossover_stock = SMACrossoverStrategyBacktester(ticker, shortSMAdays, longSMAdays, start, end)
     strategy_returns = sma_crossover_stock.run_strategy()
-    save_results(ticker, start, end, sma_crossover_stock.results)
+    hyper_param_str = f"{shortSMAdays}_{longSMAdays}"
+    save_results(ticker, start, end,hyper_param_str, sma_crossover_stock.results)
     logger.info(f"{ticker}:{strategy_returns}")
     
 
