@@ -102,7 +102,7 @@ class SMACrossoverStrategyBacktester(object):
         '''
         if self.results is None:
             print('No results to plot yet. Run a strategy.')
-        title = '%s | SMA1=%d, SMA2=%d' % (self.symbol,
+        title = 'SMALongShort: %s | SMA1=%d, SMA2=%d' % (self.symbol,
                                             self.SMA1, self.SMA2)
         self.results[['benchmark_returns', 'strategy_returns']].plot(title=title,
                                                     figsize=(10, 6))

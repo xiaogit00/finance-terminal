@@ -1,5 +1,5 @@
 # %%
-from BACKTESTER_CLASS import xxx
+from BACKTESTER_CLASS import MeanReversionBacktester
 import sys
 ############## THE BELOW IS FOR MAKING IMPORTS CORRECT FOR LOGGING ################
 from pathlib import Path
@@ -12,16 +12,18 @@ from utils.save_results import save_results
 logger = setup_logger(filename_without_ext)
 ##############################
 
-stocks = []
-start = "" #2015-01-01
-end = ""
-
+stocks = ["META", "AAPL", "AMZN", "NFLX", "GOOG"]
+start = "2015-01-01"
+end = "2019-12-31"
+SMA = 30 
+threshold = 2.5
 logger.info(f"Generating backtests for dates between {start} and {end} for {stocks}")
 # %%
 for ticker in stocks:
-    strategy_stock = xxx(ticker, 40, 200, start, end)
+    strategy_stock = MeanReversionBacktester(ticker, start, end, SMA, threshold, 1, 0.0)
     strategy_returns = strategy_stock.run_strategy()
-    save_results(ticker, start, end, strategy_stock.results)
+    hyper_param_str = f'{SMA}SMA_{threshold}threshold'
+    save_results(ticker, start, end, hyper_param_str, strategy_stock.results)
     strategy_stock.plot_results()
     logger.info(f"{ticker}:{strategy_returns}")
     

@@ -1,0 +1,2 @@
+2026-02-26 11:45:03,450 | INFO | Logging initialized. Saving to logs/BACKTEST_RUN_20260226_114503.log
+2026-02-26 11:45:03,451 | INFO | Generating backtests for dates between 2015-01-01 and 2019-12-31 for ['META', 'AAPL', 'AMZN', 'NFLX', 'GOOG']

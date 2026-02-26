@@ -96,7 +96,7 @@ class SampleBacktesterClass(object):
             print('No results to plot yet. Run a strategy.')
         save_dir = "backtest_charts"
         os.makedirs(save_dir, exist_ok=True)
-        title = '%s | %sd momentum | TC = %.2f' % (self.symbol, self.momentum, self.tc)
+        title = 'StrategyName %s | %sd hyperParamX | TC = %.2f' % (self.symbol, self.hyperParam, self.tc)
         ax = self.results[['benchmark_returns', 'strategy_returns']].plot(
                 title=title,
                 figsize=(10, 6)
