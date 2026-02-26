@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
+from datetime import datetime
+import matplotlib.pyplot as plt
 
 class SampleBacktesterClass(object):
     ''' To backtest for a particular ticker, simply instantiate and call methods.
@@ -92,7 +94,21 @@ class SampleBacktesterClass(object):
         '''
         if self.results is None:
             print('No results to plot yet. Run a strategy.')
-        title = '%s | SMA1=%d, SMA2=%d' % (self.symbol,
-                                            self.SMA1, self.SMA2)
-        self.results[['benchmark_returns', 'strategy_returns']].plot(title=title,
-                                                    figsize=(10, 6))
+        save_dir = "backtest_charts"
+        os.makedirs(save_dir, exist_ok=True)
+        title = '%s | %sd momentum | TC = %.2f' % (self.symbol, self.momentum, self.tc)
+        ax = self.results[['benchmark_returns', 'strategy_returns']].plot(
+                title=title,
+                figsize=(10, 6)
+            )
+        
+        run_id = datetime.now().strftime("%d%b%y").upper()
+        file_path = os.path.join(save_dir, f"{self.start}_to_{self.end}_{self.symbol}_momentum{self.momentum}d_{run_id}.png")
+        # Save figure
+        fig = ax.get_figure()
+        fig.savefig(file_path, bbox_inches="tight", dpi=300)
+        plt.show()
+        plt.close(fig)  # Prevent memory buildup if running many plots
+
+        print(f"Plot saved to {file_path}")
+
